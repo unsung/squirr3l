@@ -1,8 +1,9 @@
 #ifndef RK4_INCLUDED
 #define RK4_INCLUDED
+#include "coord.h"
+#include <stdio.h>
+#include <math.h>
 
-double g(int i, double* f, double* k, double t);
-
-double* rk4(double* f, double ti, double tf);
+void update(State*, Coord*, int);
 
 #endif
