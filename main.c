@@ -1,11 +1,14 @@
-#include <stdio.h>
 #include "rk4.h"
+#include "coord.h"
+
 
 int main() {
 
-	double f[] = {0,0,0,1};
+	State probe = {1,0,0,1};
+	Coord bodies = {0,0};
+	printf("%d\n",&probe);
+	update(&probe, &bodies, 1);
 
-	printf("%f", rk4(f, 0, 3.14)[0]);
 
 	return 0;
 
