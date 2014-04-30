@@ -4,67 +4,61 @@
 void update_v(double px, double py, State* k, Coord* bodies, int num_bodies) {
 	int i;
 	double invr, dx, dy;
-	
+
 	dx=px;
 	dy=py;
-	invr=1/sqrt(dx*dx+dy*dy);
-	k->vx += -py*invr*invr*invr;
-	k->vy += px *invr*invr*invr;
-
-		
+	invr=1.0/sqrt(dx*dx+dy*dy);
+	k->vx = -px*invr*invr*invr;
+	k->vy = -py*invr*invr*invr;
 }
 
 void update(State* probe, Coord* bodies, int num_bodies) {
 	int i, step;
 
 	double t, ti, tf, dt;
-	t = ti=0;
-	tf=3.14;
+	t = ti = 0;
+	tf = 6.28;
 	dt = 1.0e-4;
-	step=0;
+	step = 0;
 
-	State k[4]={{0}};
+	State k[4] = {{0}};
 
 	do {
 
 		k[0].x=0.5*dt*(probe->vx);
 		k[0].y=0.5*dt*(probe->vy);
-		k[0].vx=k[0].vy=0;
-		printf("%f %f %f %f\n", k->x, k->y, k->vx, k->vy);
 		update_v(probe->x, probe->y, k, bodies, num_bodies);
-		printf("%f %f %f %f\n", k->x, k->y, k->vx, k->vy);
 		k[0].vx*=dt*0.5;
 		k[0].vy*=dt*0.5;
 
 		k[1].x=0.5*dt*(probe->vx+k[0].vx);
 		k[1].y=0.5*dt*(probe->vy+k[0].vy);
-		k[1].vx=k[1].vy=0;
 		update_v(probe->x + k[0].x, probe->y + k[0].y, k+1, bodies, num_bodies);
 		k[1].vx*=dt*0.5;
 		k[1].vy*=dt*0.5;
 
 		k[2].x=dt*(probe->vx+k[1].vx);
 		k[2].y=dt*(probe->vy+k[1].vy);
-		k[2].vx=k[2].vy=0;
 		update_v(probe->x + k[1].x, probe->y + k[1].y, k+2, bodies, num_bodies);
 		k[2].vx*=dt;
 		k[2].vy*=dt;
 
 		k[3].x=0.5*dt*(probe->vx+k[2].vx);
 		k[3].y=0.5*dt*(probe->vy+k[2].vy);
-		k[3].vx=k[3].vy=0;
 		update_v(probe->x + k[2].x, probe->y + k[2].y, k+3, bodies, num_bodies);
 		k[3].vx*=dt*0.5;
 		k[3].vy*=dt*0.5;
 
-		probe->x += (k[0].x+2*k[1].x+k[2].x+k[3].x)/3;
-		probe->y += (k[0].y+2*k[1].y+k[2].y+k[3].y)/3;
+		probe->x  += (k[0].x +2*k[1].x +k[2].x +k[3].x )/3;
+		probe->y  += (k[0].y +2*k[1].y +k[2].y +k[3].y )/3;
 		probe->vx += (k[0].vx+2*k[1].vx+k[2].vx+k[3].vx)/3;
 		probe->vy += (k[0].vy+2*k[1].vy+k[2].vy+k[3].vy)/3;
 
 		// increment time
-		t = ti+dt*step++;
+		t = ti+dt*++step;
 
-	} while(step<3);
+	} while(t<=tf);
+
+	printf("%f,%f\n", probe->x, probe->y);
 
 }
