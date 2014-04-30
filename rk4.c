@@ -1,23 +1,26 @@
 #include "rk4.h"
 #include "coord.h"
 
-void update_v(double px, double py, State* k, Coord* bodies, int num_bodies) {
+void update_v(double px, double py, State* k, State** bodies, int num_bodies) {
 	int i;
 	double invr, dx, dy;
 
-	dx=px;
-	dy=py;
-	invr=1.0/sqrt(dx*dx+dy*dy);
-	k->vx = -px*invr*invr*invr;
-	k->vy = -py*invr*invr*invr;
+	for(i=0; i<num_bodies; i++) {
+		dx=bodies[i]->x - px;
+		dy=bodies[i]->y - py;
+		invr=1.0/sqrt(dx*dx+dy*dy);
+		k->vx = (bodies[i]->x - px)*invr*invr*invr;
+		k->vy = (bodies[i]->y - py)*invr*invr*invr;
+	}
+
 }
 
-void update(State* probe, Coord* bodies, int num_bodies) {
+void update(State* probe, State** bodies, int num_bodies) {
 	int i, step;
 
 	double t, ti, tf, dt;
 	t = ti = 0;
-	tf = 6.28;
+	tf = 2*M_PI;
 	dt = 1.0e-4;
 	step = 0;
 

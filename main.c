@@ -4,9 +4,10 @@
 
 int main() {
 
-	State probe = {1,0,0,1};
-	Coord bodies = {0,0};
-	update(&probe, &bodies, 1);
+	State probe = {1,1,1,0};
+	State sun = {1,0,0,0};
+	State* bodies[] = { &sun };
+	update(&probe, bodies, 1);
 
 
 	return 0;
