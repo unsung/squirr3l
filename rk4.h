@@ -4,6 +4,6 @@
 #include <stdio.h>
 #include <math.h>
 
-void update(State*, State**, int);
+void update(double, State*, State**, int);
 
 #endif
