@@ -5,28 +5,40 @@
 int main() {
 
 	double r0, t0, v0;
-	r0=149598262;
-	t0 = r0*sqrt(r0/GME);//hr
-	v0=r0/t0;
-
 	double dt, t, tf;
-	int N=1;
+	double a;
 
-	State sun = {0,0,0,0};
-	State earth = {147098291/r0,0,0,109034.3202/v0};
-	State* bodies[] = {&sun};
-
+	r0 = 1;
+	t0 = 1; // t0 = r0*sqrt(r0/GME);//hr
+	v0 = r0 / t0;
 
 	dt=1.e-4;
 
-	for(t=0;t<2*M_PI;t+=dt) {
-		update(dt, &earth, bodies, 1);
-	}
+	State sun     = {0, 0, 0  ,0, 1};
+	State earth   = {1, 0, 0  ,1, 3e-6};
 
-	printf("r0 = %f\nt0 = %f\nv0 = %f\n",r0,t0,v0);
-	printf("earth state: %f %f\n",
-			r0*sqrt(earth.x *earth.x  + earth.y *earth.y ),
-			v0*sqrt(earth.vx*earth.vx + earth.vy*earth.vy));
+	a=M_PI/180*60;
+	State jupiter = {5*cos(a), 5*sin(a),-.5*sin(a),.5*cos(a), 9.5511e-4};
+
+	State probe   = earth;
+
+	probe.vx += 0.2;
+	probe.vy += 0.2;
+
+	State* planet_bodies[] = {&sun};
+	State* probe_bodies[] = {&sun, &earth, &jupiter};
+
+	for(t=0;t<2*M_PI;t+=dt) {
+		update(dt, &probe  , probe_bodies  , 3);
+		update_planet(dt, &earth);
+		update_planet(dt, &jupiter);
+
+		printf("%f\t%f\t%f\t%f\t%f\t%f\n",
+				probe.x, probe.y,
+				earth.x, earth.y,
+				jupiter.x, jupiter.y);
+	}
+	//printf("%f\n"
 
 	return 0;
 
