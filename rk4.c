@@ -10,8 +10,8 @@ void update_v(double px, double py, State* k, State** bodies, int num_bodies) {
 		dy=bodies[i]->y - py;
 		invr=pow(dx*dx+dy*dy, -0.5);
 		invr*=invr*invr;
-		k->vx = bodies[i]->m*(bodies[i]->x - px)*invr;
-		k->vy = bodies[i]->m*(bodies[i]->y - py)*invr;
+		k->vx += bodies[i]->m*(bodies[i]->x - px)*invr;
+		k->vy += bodies[i]->m*(bodies[i]->y - py)*invr;
 	}
 
 }

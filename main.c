@@ -2,25 +2,31 @@
 #include "def.h"
 
 
-int main() {
+int main(int argc, char** argv) {
 
-	double r0, t0, v0;
 	double dt, t, tf;
+	double rj, vj;
+	double a, sina, cosa;
 
-	r0 = 1;
-	t0 = 1; // t0 = r0*sqrt(r0/GME);//hr
-	v0 = r0 / t0;
+	rj=5.2; // AU
+	vj=.43877; // unitless multiple of v0
+
+	a=9.94;
+	
+	sina=sin((90-a)*M_PI/180);
+	cosa=cos((90-a)*M_PI/180);
 
 	dt=1.e-4;
 
+
+
 	State sun     = {0, 0, 0  ,0, 1};
-	//State earth   = {1, 0, 0  ,1, 3e-6};
 	State earth   = {1, 0, 0  ,1, 0};
-	State jupiter = {0, 5,-.5,0, 9.5511e-4};
+	State jupiter = {rj*cosa, rj*sina,-vj*sina,vj*cosa, 9.5511e-4};
 
 	State probe   = earth;
 
-	probe.vy += 0.01;
+	probe.vy += .9;
 
 	State* probe_bodies[] = {&sun, &jupiter};
 
@@ -28,6 +34,13 @@ int main() {
 		update(dt, &probe  , probe_bodies  , 2);
 		update_planet(dt, &earth);
 		update_planet(dt, &jupiter);
+
+		/*
+		if(probe.x*probe.x+probe.y*probe.y >= 27.04) {
+			printf("%f\n", atan(jupiter.y/jupiter.x)-atan(probe.y/probe.x));
+			break;
+		}
+		*/
 
 		printf("%f\t%f\t%f\t%f\t%f\t%f\n",
 				probe.x, probe.y,
