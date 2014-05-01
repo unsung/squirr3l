@@ -1,6 +1,7 @@
 #ifndef RK4_INCLUDED
 #define RK4_INCLUDED
-#include "coord.h"
+
+#include "def.h"
 #include <stdio.h>
 #include <math.h>
 

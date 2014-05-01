@@ -1,5 +1,5 @@
 #include "rk4.h"
-#include "coord.h"
+#include "def.h"
 
 void update_v(double px, double py, State* k, State** bodies, int num_bodies) {
 	int i;
